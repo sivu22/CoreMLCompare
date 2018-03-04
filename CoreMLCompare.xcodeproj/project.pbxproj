@@ -17,6 +17,8 @@
 		5283FED7204C4F600054FEA6 /* SqueezeNet.cmlc in Resources */ = {isa = PBXBuildFile; fileRef = 5283FED6204C4F600054FEA6 /* SqueezeNet.cmlc */; };
 		5283FED9204C51080054FEA6 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FED8204C51080054FEA6 /* Helper.swift */; };
 		5283FEDB204C5C400054FEA6 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEDA204C5C400054FEA6 /* Log.swift */; };
+		5283FEDD204C996C0054FEA6 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEDC204C996C0054FEA6 /* Models.swift */; };
+		5283FEE1204C9AC60054FEA6 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEE0204C9AC60054FEA6 /* Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		5283FED6204C4F600054FEA6 /* SqueezeNet.cmlc */ = {isa = PBXFileReference; lastKnownFileType = file; name = SqueezeNet.cmlc; path = CoreMLCompare/SqueezeNet.cmlc; sourceTree = SOURCE_ROOT; };
 		5283FED8204C51080054FEA6 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		5283FEDA204C5C400054FEA6 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		5283FEDC204C996C0054FEA6 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		5283FEE0204C9AC60054FEA6 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,9 +69,10 @@
 			isa = PBXGroup;
 			children = (
 				5283FED1204B623F0054FEA6 /* CoreML Models */,
+				5283FEDE204C9A630054FEA6 /* Model */,
+				5283FEDF204C9A7A0054FEA6 /* View */,
 				5283FEBD2048B70B0054FEA6 /* AppDelegate.swift */,
 				5283FECF204B187A0054FEA6 /* CMLCError.swift */,
-				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
 				5283FED8204C51080054FEA6 /* Helper.swift */,
 				5283FEDA204C5C400054FEA6 /* Log.swift */,
 				5283FEC12048B70B0054FEA6 /* Main.storyboard */,
@@ -85,6 +90,23 @@
 				5283FED2204B63860054FEA6 /* MobileNet.mlmodel */,
 			);
 			path = "CoreML Models";
+			sourceTree = "<group>";
+		};
+		5283FEDE204C9A630054FEA6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5283FEE0204C9AC60054FEA6 /* Model.swift */,
+				5283FEDC204C996C0054FEA6 /* Models.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5283FEDF204C9A7A0054FEA6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,6 +188,8 @@
 				5283FED9204C51080054FEA6 /* Helper.swift in Sources */,
 				5283FEBE2048B70B0054FEA6 /* AppDelegate.swift in Sources */,
 				5283FED0204B187A0054FEA6 /* CMLCError.swift in Sources */,
+				5283FEDD204C996C0054FEA6 /* Models.swift in Sources */,
+				5283FEE1204C9AC60054FEA6 /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

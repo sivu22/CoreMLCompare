@@ -20,9 +20,9 @@ class CMLCViewController: UIViewController {
     @IBOutlet weak var confidence2Label: UILabel!
     
     private var previewLayer: AVCaptureVideoPreviewLayer!
-    private var model, model2: VNCoreMLModel?
-    private var modelError: String?
-    private var modelOK = true
+    
+    private var models: Models!
+    private var model2: VNCoreMLModel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,34 +79,14 @@ extension CMLCViewController {
         var error: String?
         
         DispatchQueue.global().async {
-            self.model = try? VNCoreMLModel(for: MobileNet().model)
-            if self.model == nil {
-                error = "Failed to init MobileNet model"
-                Log.e(error!)
-            }
+            self.models = Models()
             
-            if let compiledModelURL = try? MLModel.compileModel(at: Bundle.main.url(forResource: "SqueezeNet", withExtension: "cmlc")!) {
-                Log.i(compiledModelURL.absoluteString)
-                if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
-                    self.model2 = try? VNCoreMLModel(for: compiledModel)
-                } else {
-                    Log.e("Failed to read SqueezeNet model")
-                }
-            } else {
-                Log.e("Failed to compile model SqueezeNet")
-            }
-            
-            if self.model2 == nil {
-                Log.e("Failed to init SqueezeNet model")
-                error! += "Failed to init SqueezeNet model"
-            }
+            error = self.models.loadModels()
             
             DispatchQueue.main.async {
                 self.loadingView.isHidden = true
                 
                 if let error = error {
-                    self.modelOK = false
-                    
                     let alert = CMLCError.createAlert(withText: error)
                     self.present(alert, animated: true, completion: nil)
                 }
@@ -143,57 +123,46 @@ extension CMLCViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection)
     {
-        guard modelOK else {
-            return
-        }
-        
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             Log.e("Failed to get pixelbuffer")
             return
         }
         
-        let request = VNCoreMLRequest(model: model!) { request, error in
-            guard let results = request.results as? [VNClassificationObservation] else {
-                Log.e("Could not obtain results")
-                return
-            }
-            guard let firstResult = results.first else {
-                Log.e("Failed to get first result")
-                return
-            }
-            
-            if firstResult.confidence > 0.5 {
-                DispatchQueue.main.async {
-                    self.objectLabel.text = firstResult.identifier.localizedCapitalized
-                    self.confidenceLabel.text = String(firstResult.confidence * 100) + "%"
+        var requests = [VNCoreMLRequest]()
+        for cmlcModel in models.cmlcModels {
+            if cmlcModel.state == .loaded {
+                let request = VNCoreMLRequest(model: cmlcModel.visionModel!) { request, error in
+                    guard let results = request.results as? [VNClassificationObservation] else {
+                        Log.e("Could not obtain results")
+                        return
+                    }
+                    guard let firstResult = results.first else {
+                        Log.e("Failed to get first result")
+                        return
+                    }
+                    
+                    if firstResult.confidence > 0.5 {
+                        DispatchQueue.main.async {
+                            if cmlcModel.name == "MobileNet" {
+                                self.objectLabel.text = firstResult.identifier.localizedCapitalized
+                                self.confidenceLabel.text = (firstResult.confidence * 100).stringWithTwoDecimals() + "%"
+                            } else {
+                                self.object2Label.text = firstResult.identifier.localizedCapitalized
+                                self.confidence2Label.text = (firstResult.confidence * 100).stringWithTwoDecimals() + "%"
+                            }
+                        }
+                    }
                 }
+                // Matches all current Apple models
+                request.imageCropAndScaleOption = .centerCrop
+                
+                requests.append(request)
             }
         }
-        // Matches all current Apple models
-        request.imageCropAndScaleOption = .centerCrop
-        
-        let request2 = VNCoreMLRequest(model: model2!) { request, error in
-            guard let results = request.results as? [VNClassificationObservation] else {
-                Log.e("Could not obtain results")
-                return
-            }
-            guard let firstResult = results.first else {
-                Log.e("Failed to get first result")
-                return
-            }
-            
-            if firstResult.confidence > 0.5 {
-                DispatchQueue.main.async {
-                    self.object2Label.text = firstResult.identifier.localizedCapitalized
-                    self.confidence2Label.text = String(firstResult.confidence * 100) + "%"
-                }
-            }
-        }
-        // Matches all current Apple models
-        request2.imageCropAndScaleOption = .centerCrop
         
         // Waiting for Apple to fix the perform request array bug
-        try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
-        try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request2])
+        for request in requests {
+            try? VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:]).perform([request])
+        }
     }
 }

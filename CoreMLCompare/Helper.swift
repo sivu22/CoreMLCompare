@@ -18,3 +18,13 @@ class Helper {
         return URLs[0].path
     }()
 }
+
+extension Float {
+    
+    func stringWithTwoDecimals() -> String {
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = 2
+        
+        return formatter.string(from: NSNumber(value: self)) ?? "0"
+    }
+}
