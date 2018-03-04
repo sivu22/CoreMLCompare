@@ -14,6 +14,7 @@
 		5283FEC82048B70B0054FEA6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5283FEC62048B70B0054FEA6 /* LaunchScreen.storyboard */; };
 		5283FED0204B187A0054FEA6 /* CMLCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FECF204B187A0054FEA6 /* CMLCError.swift */; };
 		5283FED3204B63860054FEA6 /* MobileNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5283FED2204B63860054FEA6 /* MobileNet.mlmodel */; };
+		5283FED7204C4F600054FEA6 /* SqueezeNet.cmlc in Resources */ = {isa = PBXBuildFile; fileRef = 5283FED6204C4F600054FEA6 /* SqueezeNet.cmlc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		5283FEC92048B70B0054FEA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5283FECF204B187A0054FEA6 /* CMLCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMLCError.swift; sourceTree = "<group>"; };
 		5283FED2204B63860054FEA6 /* MobileNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = MobileNet.mlmodel; path = CoreMLCompare/MobileNet.mlmodel; sourceTree = SOURCE_ROOT; };
+		5283FED6204C4F600054FEA6 /* SqueezeNet.cmlc */ = {isa = PBXFileReference; lastKnownFileType = file; name = SqueezeNet.cmlc; path = CoreMLCompare/SqueezeNet.cmlc; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 		5283FED1204B623F0054FEA6 /* CoreML Models */ = {
 			isa = PBXGroup;
 			children = (
+				5283FED6204C4F600054FEA6 /* SqueezeNet.cmlc */,
 				5283FED2204B63860054FEA6 /* MobileNet.mlmodel */,
 			);
 			path = "CoreML Models";
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5283FEC82048B70B0054FEA6 /* LaunchScreen.storyboard in Resources */,
+				5283FED7204C4F600054FEA6 /* SqueezeNet.cmlc in Resources */,
 				5283FEC52048B70B0054FEA6 /* Assets.xcassets in Resources */,
 				5283FEC32048B70B0054FEA6 /* Main.storyboard in Resources */,
 			);
@@ -291,7 +295,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 473859EV6W;
 				INFOPLIST_FILE = CoreMLCompare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.CoreMLCompare;
@@ -306,7 +310,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 473859EV6W;
 				INFOPLIST_FILE = CoreMLCompare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.CoreMLCompare;
