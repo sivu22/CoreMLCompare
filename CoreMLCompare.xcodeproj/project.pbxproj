@@ -15,6 +15,8 @@
 		5283FED0204B187A0054FEA6 /* CMLCError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FECF204B187A0054FEA6 /* CMLCError.swift */; };
 		5283FED3204B63860054FEA6 /* MobileNet.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 5283FED2204B63860054FEA6 /* MobileNet.mlmodel */; };
 		5283FED7204C4F600054FEA6 /* SqueezeNet.cmlc in Resources */ = {isa = PBXBuildFile; fileRef = 5283FED6204C4F600054FEA6 /* SqueezeNet.cmlc */; };
+		5283FED9204C51080054FEA6 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FED8204C51080054FEA6 /* Helper.swift */; };
+		5283FEDB204C5C400054FEA6 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEDA204C5C400054FEA6 /* Log.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		5283FECF204B187A0054FEA6 /* CMLCError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMLCError.swift; sourceTree = "<group>"; };
 		5283FED2204B63860054FEA6 /* MobileNet.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = MobileNet.mlmodel; path = CoreMLCompare/MobileNet.mlmodel; sourceTree = SOURCE_ROOT; };
 		5283FED6204C4F600054FEA6 /* SqueezeNet.cmlc */ = {isa = PBXFileReference; lastKnownFileType = file; name = SqueezeNet.cmlc; path = CoreMLCompare/SqueezeNet.cmlc; sourceTree = SOURCE_ROOT; };
+		5283FED8204C51080054FEA6 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		5283FEDA204C5C400054FEA6 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +68,8 @@
 				5283FEBD2048B70B0054FEA6 /* AppDelegate.swift */,
 				5283FECF204B187A0054FEA6 /* CMLCError.swift */,
 				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
+				5283FED8204C51080054FEA6 /* Helper.swift */,
+				5283FEDA204C5C400054FEA6 /* Log.swift */,
 				5283FEC12048B70B0054FEA6 /* Main.storyboard */,
 				5283FEC42048B70B0054FEA6 /* Assets.xcassets */,
 				5283FEC62048B70B0054FEA6 /* LaunchScreen.storyboard */,
@@ -156,6 +162,8 @@
 			files = (
 				5283FED3204B63860054FEA6 /* MobileNet.mlmodel in Sources */,
 				5283FEC02048B70B0054FEA6 /* CMLCViewController.swift in Sources */,
+				5283FEDB204C5C400054FEA6 /* Log.swift in Sources */,
+				5283FED9204C51080054FEA6 /* Helper.swift in Sources */,
 				5283FEBE2048B70B0054FEA6 /* AppDelegate.swift in Sources */,
 				5283FED0204B187A0054FEA6 /* CMLCError.swift in Sources */,
 			);

@@ -22,7 +22,7 @@ enum CMLCError: String, Error {
         let defaultAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil)
         alert.addAction(defaultAction)
         
-        print("Error: \(text)")
+        Log.e(text)
         return alert
     }
 }
