@@ -14,18 +14,20 @@ class CMLCViewController: UIViewController {
 
     @IBOutlet weak var videoImageView: UIImageView!
     @IBOutlet weak var loadingView: UIView!
-    @IBOutlet weak var objectLabel: UILabel!
-    @IBOutlet weak var confidenceLabel: UILabel!
-    @IBOutlet weak var object2Label: UILabel!
-    @IBOutlet weak var confidence2Label: UILabel!
+    @IBOutlet weak var resultsTableView: UITableView!
     
     private var previewLayer: AVCaptureVideoPreviewLayer!
     
-    private var models: Models!
-    private var model2: VNCoreMLModel?
+    var models: Models!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        models = Models()
+        
+        resultsTableView.delegate = self
+        resultsTableView.dataSource = self
+        resultsTableView.tableFooterView = UIView(frame: CGRect.zero)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -79,8 +81,6 @@ extension CMLCViewController {
         var error: String?
         
         DispatchQueue.global().async {
-            self.models = Models()
-            
             error = self.models.loadModels()
             
             DispatchQueue.main.async {
@@ -129,27 +129,22 @@ extension CMLCViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
         
         var requests = [VNCoreMLRequest]()
-        for cmlcModel in models.cmlcModels {
+        for (index, var cmlcModel) in models.cmlcModels.enumerated() {
             if cmlcModel.state == .loaded {
                 let request = VNCoreMLRequest(model: cmlcModel.visionModel!) { request, error in
                     guard let results = request.results as? [VNClassificationObservation] else {
-                        Log.e("Could not obtain results")
+                        Log.e("Could not obtain results for model \(cmlcModel.name)")
                         return
                     }
                     guard let firstResult = results.first else {
-                        Log.e("Failed to get first result")
+                        Log.e("Failed to get first result for model \(cmlcModel.name)")
                         return
                     }
                     
-                    if firstResult.confidence > 0.5 {
+                    if cmlcModel.objectClassified(firstResult) {
+                        self.models.cmlcModels[index] = cmlcModel
                         DispatchQueue.main.async {
-                            if cmlcModel.name == "MobileNet" {
-                                self.objectLabel.text = firstResult.identifier.localizedCapitalized
-                                self.confidenceLabel.text = (firstResult.confidence * 100).stringWithTwoDecimals() + "%"
-                            } else {
-                                self.object2Label.text = firstResult.identifier.localizedCapitalized
-                                self.confidence2Label.text = (firstResult.confidence * 100).stringWithTwoDecimals() + "%"
-                            }
+                            self.resultsTableView.reloadRows(at: [index])
                         }
                     }
                 }

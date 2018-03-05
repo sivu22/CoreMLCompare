@@ -21,13 +21,22 @@ struct Model {
     private(set) var name: String
     private(set) var state: State
     
+    private(set) var object: String
+    private(set) var confidence: String
+    
     init() {
         state = .none
         name = ""
+        
+        object = ""
+        confidence = "0%"
     }
     
     init(withCoreMLModel model: MLModel, andName givenName: String = "NoName") {
         name = givenName
+        
+        object = ""
+        confidence = "0%"
         
         visionModel = try? VNCoreMLModel(for: model)
         if visionModel == nil {
@@ -36,5 +45,16 @@ struct Model {
         } else {
             state = .loaded
         }
+    }
+    
+    mutating func objectClassified(_ result: VNClassificationObservation) -> Bool {
+        if result.confidence > 0.5 {
+            object = result.identifier.localizedCapitalized
+            confidence = (result.confidence * 100).stringWithTwoDecimals() + "%"
+            
+            return true
+        }
+        
+        return false
     }
 }

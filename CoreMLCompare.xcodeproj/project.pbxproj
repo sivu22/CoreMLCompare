@@ -19,6 +19,7 @@
 		5283FEDB204C5C400054FEA6 /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEDA204C5C400054FEA6 /* Log.swift */; };
 		5283FEDD204C996C0054FEA6 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEDC204C996C0054FEA6 /* Models.swift */; };
 		5283FEE1204C9AC60054FEA6 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEE0204C9AC60054FEA6 /* Model.swift */; };
+		5283FEE3204DF1A90054FEA6 /* ResultsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		5283FEDA204C5C400054FEA6 /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		5283FEDC204C996C0054FEA6 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		5283FEE0204C9AC60054FEA6 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
+				5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -186,6 +189,7 @@
 				5283FEC02048B70B0054FEA6 /* CMLCViewController.swift in Sources */,
 				5283FEDB204C5C400054FEA6 /* Log.swift in Sources */,
 				5283FED9204C51080054FEA6 /* Helper.swift in Sources */,
+				5283FEE3204DF1A90054FEA6 /* ResultsTableView.swift in Sources */,
 				5283FEBE2048B70B0054FEA6 /* AppDelegate.swift in Sources */,
 				5283FED0204B187A0054FEA6 /* CMLCError.swift in Sources */,
 				5283FEDD204C996C0054FEA6 /* Models.swift in Sources */,

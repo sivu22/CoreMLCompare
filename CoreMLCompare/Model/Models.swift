@@ -11,7 +11,7 @@ import Vision
 
 struct Models {
     
-    private(set) var cmlcModels = [Model]()
+    var cmlcModels = [Model]()
     let count = 4
     
     init() {
@@ -25,7 +25,7 @@ struct Models {
     }
     
     func modelAtIndex(_ index: Int) -> Model? {
-        guard index < count else {
+        guard index < count && index < cmlcModels.count else {
             return nil
         }
         
@@ -33,7 +33,7 @@ struct Models {
     }
     
     func visionModelAtIndex(_ index: Int) -> VNCoreMLModel? {
-        guard index < count else {
+        guard index < count && index < cmlcModels.count else {
             return nil
         }
         
