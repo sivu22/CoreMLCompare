@@ -33,18 +33,44 @@ struct Model {
     }
     
     init(withCoreMLModel model: MLModel, andName givenName: String = "NoName") {
+        self.init()
         name = givenName
-        
-        object = ""
-        confidence = "0%"
         
         visionModel = try? VNCoreMLModel(for: model)
         if visionModel == nil {
-            Log.e("Failed to init MobileNet model")
-            state = .none
+            Log.e("Failed to init \(name) model")
         } else {
             state = .loaded
         }
+    }
+    
+    init?(withResourceName name: String, andExtension ext: String) {
+        guard let model2URL = Bundle.main.url(forResource: name, withExtension: ext) else {
+            Log.e("Failed to create URL from resource \(name).\(ext)")
+            return nil
+        }
+        
+        if let model = Model.compileModelURL(model2URL, name: name) {
+            self = model
+        } else {
+            return nil
+        }
+    }
+    
+    private static func compileModelURL(_ url: URL, name: String) -> Model? {
+        var model: Model?
+        
+        if let compiledModelURL = try? MLModel.compileModel(at: url) {
+            if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
+                model = Model(withCoreMLModel: compiledModel, andName: name)
+            } else {
+                Log.e("Failed to read \(url.lastPathComponent) model")
+            }
+        } else {
+            Log.e("Failed to compile model \(url.lastPathComponent)")
+        }
+        
+        return model
     }
     
     mutating func objectClassified(_ result: VNClassificationObservation) -> Bool {

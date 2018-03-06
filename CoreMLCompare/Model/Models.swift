@@ -43,25 +43,19 @@ struct Models {
     mutating func loadModels() -> String? {
         var error: String?
         
-        let model2URL = Bundle.main.url(forResource: "SqueezeNet", withExtension: "cmlc")
-        var model2: Model?
-        if let compiledModelURL = try? MLModel.compileModel(at: model2URL!) {
-            if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
-                model2 = Model(withCoreMLModel: compiledModel, andName: "SqueezeNet")
-            } else {
-                Log.e("Failed to read SqueezeNet model")
-            }
+        if let compiledModels = Helper.getFiles(withExtension: ".mlmodelc", inPath: Helper.supportPath) {
+            
         } else {
-            Log.e("Failed to compile model SqueezeNet")
-        }
-        
-        if let model2 = model2 {
-            if model2.state == .loaded {
-                Log.i("Successfully loaded model \(model2.name)")
-                cmlcModels.append(model2)
-            } else {
-                Log.e("Failed to init SqueezeNet model")
-                error! += "Failed to init SqueezeNet model"
+            Log.i("No models were found, will prepare SqueezeNet")
+            
+            if let model = Model(withResourceName: "SqueezeNet", andExtension: "cmlc") {
+                if model.state == .loaded {
+                    Log.i("Successfully loaded model \(model.name)")
+                    cmlcModels.append(model)
+                } else {
+                    Log.e("Failed to init model \(model.name)")
+                    error! += "Failed to init model \(model.name)"
+                }
             }
         }
         

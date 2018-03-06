@@ -17,6 +17,25 @@ class Helper {
         Log.d("supportPath = " + URLs[0].path)
         return URLs[0].path
     }()
+    
+    static func getFiles(withExtension ext: String, inPath path: String) -> [String]? {
+        guard ext.count > 1 && path.count > 1 else {
+            Log.e("Invalid parameters extension \(ext) path \(path)")
+            return nil
+        }
+        
+        var files: [String] = []
+        if let enumerator = FileManager.default.enumerator(atPath: path) {
+            while let file = enumerator.nextObject() as? URL {
+                if file.pathExtension == ext {
+                    files.append(file.lastPathComponent)
+                    Log.d("Found compiled model \(files[files.count - 1])")
+                }
+            }
+        }
+        
+        return files.count > 0 ? files : nil
+    }
 }
 
 extension Float {

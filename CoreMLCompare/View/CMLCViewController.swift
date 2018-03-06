@@ -85,6 +85,7 @@ extension CMLCViewController {
             
             DispatchQueue.main.async {
                 self.loadingView.isHidden = true
+                self.resultsTableView.reloadData()
                 
                 if let error = error {
                     let alert = CMLCError.createAlert(withText: error)
