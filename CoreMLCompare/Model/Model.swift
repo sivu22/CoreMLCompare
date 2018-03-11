@@ -24,6 +24,8 @@ struct Model {
     private(set) var object: String
     private(set) var confidence: String
     
+    private(set) var compiledURL: URL?
+    
     init() {
         state = .none
         name = ""
@@ -50,19 +52,31 @@ struct Model {
             return nil
         }
         
-        if let model = Model.compileModelURL(model2URL, name: name) {
+        let (model, compiledURL) = Model.compileModelURL(model2URL, name: name)
+        if let model = model {
             self = model
+            self.compiledURL = compiledURL
         } else {
             return nil
         }
     }
     
-    private static func compileModelURL(_ url: URL, name: String) -> Model? {
-        var model: Model?
+    init?(fromCompiledModel compiledModelURL: URL) {
+        self.init()
         
+        if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
+            self = Model(withCoreMLModel: compiledModel, andName: compiledModelURL.fileNameWithoutExtension())
+        } else {
+            Log.e("Failed to read \(compiledModelURL.lastPathComponent) model")
+            return nil
+        }
+    }
+    
+    private static func compileModelURL(_ url: URL, name: String) -> (Model?, URL?) {
         if let compiledModelURL = try? MLModel.compileModel(at: url) {
             if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
-                model = Model(withCoreMLModel: compiledModel, andName: name)
+                let model = Model(withCoreMLModel: compiledModel, andName: name)
+                return (model, compiledModelURL)
             } else {
                 Log.e("Failed to read \(url.lastPathComponent) model")
             }
@@ -70,7 +84,19 @@ struct Model {
             Log.e("Failed to compile model \(url.lastPathComponent)")
         }
         
-        return model
+        return (nil, nil)
+    }
+    
+    func saveCompiledModelURL() throws {
+        guard let url = compiledURL else {
+            throw CMLCError.modelBadURL
+        }
+        
+        do {
+            try Helper.saveURL(url, inPathURL: Helper.supportPathURL)
+        } catch {
+            throw error
+        }
     }
     
     mutating func objectClassified(_ result: VNClassificationObservation) -> Bool {
