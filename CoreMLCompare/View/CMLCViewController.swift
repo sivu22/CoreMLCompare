@@ -14,7 +14,7 @@ class CMLCViewController: UIViewController {
 
     @IBOutlet weak var videoImageView: UIImageView!
     @IBOutlet weak var loadingView: UIView!
-    @IBOutlet weak var resultsTableView: UITableView!
+    @IBOutlet weak var resultsTableView: CMLCTableView!
     
     private var previewLayer: AVCaptureVideoPreviewLayer!
     
@@ -145,7 +145,8 @@ extension CMLCViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                     if cmlcModel.objectClassified(firstResult) {
                         self.models.cmlcModels[index] = cmlcModel
                         DispatchQueue.main.async {
-                            self.resultsTableView.reloadRows(at: [index])
+                            let indexPath = IndexPath(row: index, section: 0)
+                            self.resultsTableView.updateCellAtIndex(indexPath, withModel: self.models.modelAtIndex(index))
                         }
                     }
                 }

@@ -50,7 +50,7 @@
                                     <constraint firstItem="rqk-zN-9xE" firstAttribute="centerY" secondItem="rdk-0i-5EM" secondAttribute="centerY" id="iyq-JJ-Coq"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="38" estimatedRowHeight="38" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Vqs-f1-eaN" userLabel="Results Table View">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="38" estimatedRowHeight="38" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Vqs-f1-eaN" userLabel="Results Table View" customClass="CMLCTableView" customModule="CoreMLCompare" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="515" width="375" height="152"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
