@@ -27,7 +27,44 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
         return true
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        var actions: [UITableViewRowAction] = []
+        let firstModel = indexPath.row == 0
+        
+        if !firstModel, let model = models.modelAtIndex(indexPath.row) {
+            let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
+                let alert = UIAlertController(title: "", message: "Are you sure you want to delete the model \(model.name)?", preferredStyle: UIAlertControllerStyle.alert)
+                let yesAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction!) in
+                })
+                let noAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
+                })
+                alert.addAction(yesAction)
+                alert.addAction(noAction)
+                
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            
+            actions.append(delete)
+        }
+        
+        if models.modelAtIndex(indexPath.row) != nil {
+            let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
+            }
+            
+            edit.backgroundColor = UIColor.lightGray
+            actions.append(edit)
+        }
+        
+        if !firstModel {
+            let add = UITableViewRowAction(style: .normal, title: "Add") { action, index in
+            }
+            
+            add.backgroundColor = UIColor.blue
+            actions.append(add)
+        }
+        
+        return actions
     }
     
     func tableView(_ tableView: UITableView, willBeginEditingRowAt indexPath: IndexPath) {

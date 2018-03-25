@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		525E2474205EF0380037A959 /* EditingRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E2473205EF0380037A959 /* EditingRow.swift */; };
+		525E2476205EF41F0037A959 /* CMLCTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525E2475205EF41F0037A959 /* CMLCTableView.swift */; };
 		5283FEBE2048B70B0054FEA6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEBD2048B70B0054FEA6 /* AppDelegate.swift */; };
 		5283FEC02048B70B0054FEA6 /* CMLCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */; };
 		5283FEC32048B70B0054FEA6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5283FEC12048B70B0054FEA6 /* Main.storyboard */; };
@@ -23,6 +25,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		525E2473205EF0380037A959 /* EditingRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingRow.swift; sourceTree = "<group>"; };
+		525E2475205EF41F0037A959 /* CMLCTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMLCTableView.swift; sourceTree = "<group>"; };
 		5283FEBA2048B70B0054FEA6 /* CoreMLCompare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreMLCompare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5283FEBD2048B70B0054FEA6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMLCViewController.swift; sourceTree = "<group>"; };
@@ -106,8 +110,10 @@
 		5283FEDF204C9A7A0054FEA6 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
+				525E2473205EF0380037A959 /* EditingRow.swift */,
+				525E2475205EF41F0037A959 /* CMLCTableView.swift */,
 				5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */,
+				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -186,10 +192,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				5283FED3204B63860054FEA6 /* MobileNet.mlmodel in Sources */,
+				525E2476205EF41F0037A959 /* CMLCTableView.swift in Sources */,
 				5283FEC02048B70B0054FEA6 /* CMLCViewController.swift in Sources */,
 				5283FEDB204C5C400054FEA6 /* Log.swift in Sources */,
 				5283FED9204C51080054FEA6 /* Helper.swift in Sources */,
 				5283FEE3204DF1A90054FEA6 /* ResultsTableView.swift in Sources */,
+				525E2474205EF0380037A959 /* EditingRow.swift in Sources */,
 				5283FEBE2048B70B0054FEA6 /* AppDelegate.swift in Sources */,
 				5283FED0204B187A0054FEA6 /* CMLCError.swift in Sources */,
 				5283FEDD204C996C0054FEA6 /* Models.swift in Sources */,
