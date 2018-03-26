@@ -13,7 +13,9 @@ enum CMLCError: String, Error {
     case avCaptureDevice = "Failed to get default video device."
     case avDeviceInput = "Failed to capture video device input"
     case modelBadURL = "Missing model's URL"
+    case fileExist = "File not found"
     case fileSave = "Move file error"
+    case fileDelete = "Failed to delete file"
     
     func createAlert() -> UIAlertController {
         return CMLCError.createAlert(withText: rawValue)

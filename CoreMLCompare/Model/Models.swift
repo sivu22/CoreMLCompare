@@ -79,4 +79,23 @@ struct Models {
         
         return error
     }
+    
+    mutating func deleteModelAtIndex(_ index: Int) throws {
+        guard index > 0 && index < count else {
+            Log.e("Bad index: \(index)")
+            return
+        }
+        
+        let model = cmlcModels[index]
+        guard model.state == .loaded else {
+            Log.i("No model found (or not ready) at index \(index)")
+            return
+        }
+        
+        defer {
+            cmlcModels[index] = Model()
+        }
+        
+        try cmlcModels[index].destroy()
+    }
 }

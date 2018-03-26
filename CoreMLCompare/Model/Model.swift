@@ -66,6 +66,7 @@ struct Model {
         
         if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
             self = Model(withCoreMLModel: compiledModel, andName: compiledModelURL.fileNameWithoutExtension())
+            self.compiledURL = compiledModelURL
         } else {
             Log.e("Failed to read \(compiledModelURL.lastPathComponent) model")
             return nil
@@ -94,6 +95,19 @@ struct Model {
         
         do {
             try Helper.saveURL(url, inPathURL: Helper.supportPathURL)
+        } catch {
+            throw error
+        }
+    }
+    
+    func destroy() throws {
+        guard let url = compiledURL else {
+            throw CMLCError.modelBadURL
+        }
+        
+        do {
+            try Helper.deleteURL(url)
+            Log.d("Deleted model \(name)")
         } catch {
             throw error
         }

@@ -13,7 +13,7 @@ class CMLCTableView: UITableView, EditingRow {
     var editingRow: IndexPath?
     
     func updateCell(_ cell: UITableViewCell, withModel model: Model?) {
-        if let model = model {
+        if let model = model, model.state == .loaded {
             cell.textLabel!.text = model.name + ": " + model.object
             cell.detailTextLabel!.text = model.confidence
         } else {

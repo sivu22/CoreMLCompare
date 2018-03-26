@@ -57,6 +57,23 @@ class Helper {
             throw CMLCError.fileSave
         }
     }
+    
+    static func deleteURL(_ url: URL) throws {
+        let path = url.path
+        
+        let fileManager = FileManager.default
+        guard fileManager.fileExists(atPath: path) else {
+            Log.e("File \(url.path) doesn't exist")
+            throw CMLCError.fileExist
+        }
+        
+        do {
+            try fileManager.removeItem(atPath: path)
+        } catch let error as NSError {
+            Log.e("Error while deleting \(path)): \(error.localizedDescription)")
+            throw CMLCError.fileDelete
+        }
+    }
 }
 
 extension Float {

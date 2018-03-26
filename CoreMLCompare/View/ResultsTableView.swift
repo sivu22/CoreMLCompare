@@ -31,10 +31,18 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
         var actions: [UITableViewRowAction] = []
         let firstModel = indexPath.row == 0
         
-        if !firstModel, let model = models.modelAtIndex(indexPath.row) {
+        if !firstModel, let model = models.modelAtIndex(indexPath.row), model.state == .loaded {
             let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
                 let alert = UIAlertController(title: "", message: "Are you sure you want to delete the model \(model.name)?", preferredStyle: UIAlertControllerStyle.alert)
                 let yesAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction!) in
+                    do {
+                        try self.models.deleteModelAtIndex(indexPath.row)
+                        self.resultsTableView.reloadRows(at: [indexPath], with: .none)
+                    } catch let error as CMLCError {
+                        let alert = error.createAlert()
+                        self.present(alert, animated: true, completion: nil)
+                    } catch {
+                    }
                 })
                 let noAction = UIAlertAction(title: "No", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction!) in
                 })
@@ -48,7 +56,7 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
             actions.append(delete)
         }
         
-        if models.modelAtIndex(indexPath.row) != nil {
+        if let model = models.modelAtIndex(indexPath.row), model.state == .loaded {
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
             }
             
