@@ -29,5 +29,17 @@ class CMLCTableView: UITableView, EditingRow {
             }
         }
     }
+    
+    func updateCellAtIndex(_ index: IndexPath, withTitle title: String?, andDetail detail: String?) {
+        if let cell = self.cellForRow(at: index) {
+            if let title = title {
+                cell.textLabel!.text = title
+            }
+            
+            if let detail = detail {
+                cell.detailTextLabel!.text = detail
+            }
+        }
+    }
 
 }

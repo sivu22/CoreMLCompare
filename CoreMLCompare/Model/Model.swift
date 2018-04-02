@@ -11,8 +11,13 @@ import Vision
 
 struct Model {
     
+    static let fileExtension = "mlmodel"
+    static let compiledExtension = "mlmodelc"
+    static let resourceExtenstion = "cmlc"
+    
     enum State {
         case none
+        case processing
         case loaded
         case enabled
     }
@@ -52,10 +57,9 @@ struct Model {
             return nil
         }
         
-        let (model, compiledURL) = Model.compileModelURL(model2URL, name: name)
+        let model = Model.compileModelURL(model2URL, name: name)
         if let model = model {
             self = model
-            self.compiledURL = compiledURL
         } else {
             return nil
         }
@@ -73,11 +77,16 @@ struct Model {
         }
     }
     
-    private static func compileModelURL(_ url: URL, name: String) -> (Model?, URL?) {
+    mutating func setStateProcessing() {
+        state = .processing
+    }
+    
+    static func compileModelURL(_ url: URL, name: String) -> Model? {
         if let compiledModelURL = try? MLModel.compileModel(at: url) {
             if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
-                let model = Model(withCoreMLModel: compiledModel, andName: name)
-                return (model, compiledModelURL)
+                var model = Model(withCoreMLModel: compiledModel, andName: name)
+                model.compiledURL = compiledModelURL
+                return model
             } else {
                 Log.e("Failed to read \(url.lastPathComponent) model")
             }
@@ -85,16 +94,16 @@ struct Model {
             Log.e("Failed to compile model \(url.lastPathComponent)")
         }
         
-        return (nil, nil)
+        return nil
     }
     
-    func saveCompiledModelURL() throws {
+    mutating func saveCompiledModelURL() throws {
         guard let url = compiledURL else {
             throw CMLCError.modelBadURL
         }
         
         do {
-            try Helper.saveURL(url, inPathURL: Helper.supportPathURL)
+            compiledURL = try Helper.saveURL(url, inPathURL: Helper.supportPathURL)
         } catch {
             throw error
         }
@@ -122,5 +131,13 @@ struct Model {
         }
         
         return false
+    }
+    
+    static func getURLFromText(_ text: String) -> URL? {
+        guard text.hasSuffix(fileExtension) else {
+            return nil
+        }
+        
+        return URL(string: text)
     }
 }

@@ -19,6 +19,10 @@ struct Models {
         let model = Model(withCoreMLModel: MobileNet().model, andName: "MobileNet")
         cmlcModels.append(model)
         
+        for _ in 1..<count {
+            cmlcModels.append(Model())
+        }
+        
         if model.state == .loaded {
             Log.i("Successfully loaded model \(model.name)")
         }
@@ -42,12 +46,14 @@ struct Models {
     
     mutating func loadModels() -> String? {
         var error: String?
+        var index = 1
         
-        if let compiledModelURLs = Helper.getFiles(withExtension: ".mlmodelc", inPath: Helper.supportPath) {
+        if let compiledModelURLs = Helper.getFiles(withExtension: Model.compiledExtension, inPath: Helper.supportPath) {
             for compiledModelURL in compiledModelURLs {
                 if let model = Model(fromCompiledModel: compiledModelURL) {
                     Log.i("Successfully loaded previously compiled model \(model.name)")
-                    cmlcModels.append(model)
+                    setModelAtIndex(index, withModel: model)
+                    index += 1
                 } else {
                     let modelName = compiledModelURL.fileNameWithoutExtension()
                     Log.e("Failed to load previously compiled model \(modelName)")
@@ -57,13 +63,13 @@ struct Models {
         } else {
             Log.i("No models were found, will prepare SqueezeNet")
             
-            if let model = Model(withResourceName: "SqueezeNet", andExtension: "cmlc") {
+            if var model = Model(withResourceName: "SqueezeNet", andExtension: Model.resourceExtenstion) {
                 if model.state == .loaded {
                     Log.i("Successfully loaded model \(model.name)")
-                    cmlcModels.append(model)
                     
                     do {
                         try model.saveCompiledModelURL()
+                        setModelAtIndex(index, withModel: model)
                     } catch let error as CMLCError {
                         // Just an error, will try again on next app launch
                         Log.e("Error while trying to store compiled model \(model.name): \(error.rawValue)")
@@ -81,7 +87,7 @@ struct Models {
     }
     
     mutating func deleteModelAtIndex(_ index: Int) throws {
-        guard index > 0 && index < count else {
+        guard index > 0 && index < cmlcModels.count else {
             Log.e("Bad index: \(index)")
             return
         }
@@ -97,5 +103,24 @@ struct Models {
         }
         
         try cmlcModels[index].destroy()
+    }
+    
+    mutating func setModelAtIndex(_ index: Int, withModel model: Model) {
+        guard index > 0 && index < cmlcModels.count else {
+            Log.e("Bad index: \(index)")
+            return
+        }
+        
+        cmlcModels[index] = model
+        Log.i("Model \(model.name) set up at index \(index)")
+    }
+    
+    mutating func setStateProcessingAtIndex(_ index: Int) {
+        guard index > 0 && index < cmlcModels.count else {
+            Log.e("Bad index: \(index)")
+            return
+        }
+        
+        cmlcModels[index].setStateProcessing()
     }
 }
