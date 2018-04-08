@@ -76,51 +76,6 @@ class Helper {
             throw CMLCError.fileDelete
         }
     }
-    
-    static func downloadFileURL(_ fileURL: URL, completionHandler: @escaping (URL?, CMLCError?) -> Void) {
-        let destination = supportPathURL.appendingPathComponent(fileURL.lastPathComponent)
-        Log.i("Will download \(fileURL.absoluteString)")
-        
-        DispatchQueue.global().async {
-            var url: URL?
-            var cmlcError: CMLCError?
-            
-            let session = URLSession(configuration: URLSessionConfiguration.default)
-            let request = URLRequest(url: fileURL)
-            
-            let downloadTask = session.downloadTask(with: request) { (location, response, error) in
-                if let location = location, error == nil {
-                    if let status = (response as? HTTPURLResponse)?.statusCode {
-                        Log.d("Server status code \(status)")
-                    }
-                    
-                    Log.d("Downloaded temporary file \(location.absoluteString)")
-                    do {
-                        let manager = FileManager.default
-                        if manager.fileExists(atPath: destination.path) {
-                            Log.d("File already exists, trying to remove it")
-                            try manager.removeItem(at: destination)
-                        }
-                        
-                        try manager.moveItem(at: location, to: destination)
-                        url = destination
-                        Log.i("File successfully downloaded at \(url!.absoluteString)")
-                    } catch {
-                        Log.e("Error while moving downloaded file from tmp: \(error.localizedDescription)")
-                        cmlcError = CMLCError.fileSave
-                    }
-                } else {
-                    Log.e("Error while downloading: \(error?.localizedDescription ?? "nil")")
-                    cmlcError = CMLCError.downloadFail
-                }
-                
-                DispatchQueue.main.async {
-                    completionHandler(url, cmlcError)
-                }
-            }
-            downloadTask.resume()
-        }
-    }
 }
 
 extension Float {

@@ -92,8 +92,7 @@ struct Models {
             return
         }
         
-        let model = cmlcModels[index]
-        guard model.state == .loaded else {
+        guard cmlcModels[index].state == .loaded else {
             Log.i("No model found (or not ready) at index \(index)")
             return
         }

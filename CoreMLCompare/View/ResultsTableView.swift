@@ -87,7 +87,9 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
                     self.models.setStateProcessingAtIndex(index.row)
                     self.resultsTableView.updateCellAtIndex(index, withTitle: nil, andDetail: "Downloading...")
                     
-                    Helper.downloadFileURL(url) { (downloadURL, error) in
+                    let urlDownload = URLDownload(url: url, saveLocationURL: Helper.supportPathURL.appendingPathComponent(url.lastPathComponent), atIndex: indexPath)
+                    urlDownload.delegate = self
+                    urlDownload.start() { (downloadURL, error) in
                         if let error = error {
                             self.models.setModelAtIndex(index.row, withModel: Model())
                             self.resultsTableView.reloadRows(at: [index], with: .none)
@@ -163,5 +165,12 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
             cmlcTableView.endEditingRowAt(indexPath)
         }
     }
+}
+
+// MARK: - URLDownloadDelegate
+extension CMLCViewController: URLDownloadDelegate {
     
+    func reportProgress(_ percentage: Int, atIndex index: IndexPath) {
+        resultsTableView.updateCellAtIndex(index, withTitle: nil, andDetail: "Downloading... \(percentage)%")
+    }
 }
