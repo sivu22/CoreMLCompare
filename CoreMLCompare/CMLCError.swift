@@ -18,6 +18,7 @@ enum CMLCError: String, Error {
     case fileDelete = "Failed to delete file"
     case downloadFail = "Download failed"
     case addModelFail = "Adding model failed"
+    case invalidData = "Invalid data"
     
     func createAlert() -> UIAlertController {
         return CMLCError.createAlert(withText: rawValue)

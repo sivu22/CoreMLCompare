@@ -15,7 +15,7 @@ struct Model {
     static let compiledExtension = "mlmodelc"
     static let resourceExtenstion = "cmlc"
     
-    enum State {
+    enum State: Int {
         case none
         case processing
         case loaded
@@ -30,6 +30,14 @@ struct Model {
     private(set) var confidence: String
     
     private(set) var compiledURL: URL?
+    
+    
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case state
+        case compiledURL
+    }
+    
     
     init() {
         state = .none
@@ -139,5 +147,31 @@ struct Model {
         }
         
         return URL(string: text)
+    }
+}
+
+// MARK: - Codable
+extension Model: Codable {
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        if let stated = State(rawValue: try container.decode(Int.self, forKey: .state)) {
+            state = stated
+        } else {
+            throw CMLCError.invalidData
+        }
+        compiledURL = try container.decode(URL.self, forKey: .compiledURL)
+        
+        object = ""
+        confidence = "0%"
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(name, forKey: .name)
+        try container.encode(state.rawValue, forKey: .state)
+        try container.encode(compiledURL, forKey: .compiledURL)
     }
 }
