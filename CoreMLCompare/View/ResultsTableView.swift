@@ -124,7 +124,6 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
                                             // (5) Update UI with new model
                                             DispatchQueue.main.async {
                                                 if success {
-                                                    self.models.setModelAtIndex(index.row, withModel: model)
                                                     self.resultsTableView.updateCellAtIndex(index, withModel: model)
                                                 } else {
                                                     self.resultsTableView.updateCellAtIndex(index, withModel: nil)

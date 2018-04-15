@@ -76,6 +76,21 @@ class Helper {
             throw CMLCError.fileDelete
         }
     }
+    
+    static func loadSetting(forKey key: String) -> Data? {
+        let uds = UserDefaults.standard
+        return uds.value(forKey: key) as? Data
+    }
+    
+    static func saveSetting(_ data: Data, forKey key: String) {
+        let uds = UserDefaults.standard
+        uds.set(data, forKey: key)
+    }
+    
+    static func removeSetting(forKey key: String) {
+        let uds = UserDefaults.standard
+        uds.removeObject(forKey: key)
+    }
 }
 
 extension Float {

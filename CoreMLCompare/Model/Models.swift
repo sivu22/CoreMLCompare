@@ -45,22 +45,30 @@ struct Models {
     }
     
     mutating func loadModels() -> String? {
-        var error: String?
-        var index = 1
+        var error = ""
+        var loadedModels = false
         
-        if let compiledModelURLs = Helper.getFiles(withExtension: Model.compiledExtension, inPath: Helper.supportPath) {
-            for compiledModelURL in compiledModelURLs {
-                if let model = Model(fromCompiledModel: compiledModelURL) {
-                    Log.i("Successfully loaded previously compiled model \(model.name)")
-                    setModelAtIndex(index, withModel: model)
-                    index += 1
-                } else {
-                    let modelName = compiledModelURL.fileNameWithoutExtension()
-                    Log.e("Failed to load previously compiled model \(modelName)")
-                    error! += "Failed to load previously compiled model \(modelName)\n"
+        for i in 1..<count {
+            let key = "model\(i)"
+            do {
+                if var modelDecoded = try Model.userDefaultsLoadKey(key) {
+                    if let loadError = modelDecoded.loadCompiledModel() {
+                        Helper.removeSetting(forKey: key)
+                        
+                        Log.e("Index \(i): \(loadError)")
+                        error += loadError + "\n"
+                    } else {
+                        setModelAtIndex(i, withModel: modelDecoded, andSave: false)
+                        loadedModels = true
+                    }
                 }
+            } catch let decodeError {
+                Log.e("Loading previously compiled model failed: \(decodeError.localizedDescription)")
+                error += "Failed to restore model at index \(i)\n"
             }
-        } else {
+        }
+        
+        if !loadedModels {
             Log.i("No models were found, will prepare SqueezeNet")
             
             if var model = Model(withResourceName: "SqueezeNet", andExtension: Model.resourceExtenstion) {
@@ -69,7 +77,7 @@ struct Models {
                     
                     do {
                         try model.saveCompiledModelURL()
-                        setModelAtIndex(index, withModel: model)
+                        setModelAtIndex(1, withModel: model)
                     } catch let error as CMLCError {
                         // Just an error, will try again on next app launch
                         Log.e("Error while trying to store compiled model \(model.name): \(error.rawValue)")
@@ -78,12 +86,15 @@ struct Models {
                     }
                 } else {
                     Log.e("Failed to init model \(model.name)")
-                    error! += "Failed to init model \(model.name)\n"
+                    error += "Failed to init model \(model.name)\n"
                 }
             }
         }
         
-        return error
+        if error.count > 0 {
+            return error
+        }
+        return nil
     }
     
     mutating func deleteModelAtIndex(_ index: Int) throws {
@@ -99,12 +110,14 @@ struct Models {
         
         defer {
             cmlcModels[index] = Model()
+            let key = "model\(index)"
+            Helper.removeSetting(forKey: key)
         }
         
         try cmlcModels[index].destroy()
     }
     
-    mutating func setModelAtIndex(_ index: Int, withModel model: Model) {
+    mutating func setModelAtIndex(_ index: Int, withModel model: Model, andSave save: Bool = true) {
         guard index > 0 && index < cmlcModels.count else {
             Log.e("Bad index: \(index)")
             return
@@ -112,6 +125,19 @@ struct Models {
         
         cmlcModels[index] = model
         Log.i("Model \(model.name) set up at index \(index)")
+        
+        if save {
+            do {
+                let key = "model\(index)"
+                if model.state == .none {
+                    Helper.removeSetting(forKey: key)
+                } else {
+                    try cmlcModels[index].userDefaultsSaveKey(key)
+                }
+            } catch {
+                Log.e("Model at index \(index) will not be available after app restart!")
+            }
+        }
     }
     
     mutating func setStateProcessingAtIndex(_ index: Int) {

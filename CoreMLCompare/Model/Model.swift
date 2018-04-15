@@ -117,6 +117,36 @@ struct Model {
         }
     }
     
+    mutating func loadCompiledModel() -> String? {
+        var error: String?
+        
+        defer {
+            if let error = error {
+                Log.e(error)
+            } else {
+                Log.d("Successfully loaded compiled model \(name)")
+            }
+        }
+        
+        guard let url = compiledURL else {
+            error = "Compiled model URL is missing for model \(name)"
+            return error
+        }
+        
+        if let compiledModel = try? MLModel(contentsOf: url) {
+            visionModel = try? VNCoreMLModel(for: compiledModel)
+            if visionModel == nil {
+                error = "Failed to init \(name) model"
+            } else {
+                state = .loaded
+            }
+        } else {
+            error = "Failed to read \(url.lastPathComponent) model"
+        }
+        
+        return error
+    }
+    
     func destroy() throws {
         guard let url = compiledURL else {
             throw CMLCError.modelBadURL
@@ -161,7 +191,8 @@ extension Model: Codable {
         } else {
             throw CMLCError.invalidData
         }
-        compiledURL = try container.decode(URL.self, forKey: .compiledURL)
+        let modelFileName = try container.decode(String.self, forKey: .compiledURL)
+        compiledURL = Helper.supportPathURL.appendingPathComponent(modelFileName)
         
         object = ""
         confidence = "0%"
@@ -172,6 +203,30 @@ extension Model: Codable {
         
         try container.encode(name, forKey: .name)
         try container.encode(state.rawValue, forKey: .state)
-        try container.encode(compiledURL, forKey: .compiledURL)
+        try container.encode(compiledURL!.lastPathComponent, forKey: .compiledURL)
+    }
+}
+
+// MARK: - UserDefaults
+extension Model {
+    
+    func userDefaultsSaveKey(_ key: String) throws {
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(self)
+        Helper.saveSetting(data, forKey: key)
+    }
+    
+    static func userDefaultsLoadKey(_ key: String) throws -> Model? {
+        if let data = Helper.loadSetting(forKey: key) {
+            let decoder = JSONDecoder()
+            let modelDecoded = try decoder.decode(Model.self, from: data)
+            return modelDecoded
+        }
+        
+        return nil
+    }
+    
+    static func userDefaultsDeleteKey(_ key: String) {
+        Helper.removeSetting(forKey: key)
     }
 }
