@@ -24,6 +24,7 @@
 		5283FEDD204C996C0054FEA6 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEDC204C996C0054FEA6 /* Models.swift */; };
 		5283FEE1204C9AC60054FEA6 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEE0204C9AC60054FEA6 /* Model.swift */; };
 		5283FEE3204DF1A90054FEA6 /* ResultsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */; };
+		52C468EE208E773900E03210 /* AddModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C468ED208E773900E03210 /* AddModelViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		5283FEDC204C996C0054FEA6 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		5283FEE0204C9AC60054FEA6 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableView.swift; sourceTree = "<group>"; };
+		52C468ED208E773900E03210 /* AddModelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddModelViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 				525E2475205EF41F0037A959 /* CMLCTableView.swift */,
 				5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */,
 				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
+				52C468ED208E773900E03210 /* AddModelViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -199,6 +202,7 @@
 			files = (
 				5283FED3204B63860054FEA6 /* MobileNet.mlmodel in Sources */,
 				525E2476205EF41F0037A959 /* CMLCTableView.swift in Sources */,
+				52C468EE208E773900E03210 /* AddModelViewController.swift in Sources */,
 				5283FEC02048B70B0054FEA6 /* CMLCViewController.swift in Sources */,
 				5283FEDB204C5C400054FEA6 /* Log.swift in Sources */,
 				5283FED9204C51080054FEA6 /* Helper.swift in Sources */,
@@ -354,7 +358,7 @@
 				DEVELOPMENT_TEAM = 473859EV6W;
 				INFOPLIST_FILE = CoreMLCompare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.CoreMLCompare;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.coremlcompare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -369,7 +373,7 @@
 				DEVELOPMENT_TEAM = 473859EV6W;
 				INFOPLIST_FILE = CoreMLCompare/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.CoreMLCompare;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sivu.coremlcompare;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

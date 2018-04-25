@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  CoreMLCompare
 //
-//  Created by Sivu22 on 01.03.18.
+//  Created by Cristian Sava on 01.03.18.
 //  Copyright © 2018 Cristian Sava. All rights reserved.
 //
 
@@ -40,7 +40,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
 
+// MARK: - Open in CMLC
+extension AppDelegate {
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "AddModel") as! AddModelViewController
+        let rootVC = window!.rootViewController as! CMLCViewController
+        
+        vc.newModelURL = url
+        vc.models = rootVC.models
+        vc.delegate = rootVC
+        rootVC.present(vc, animated: true, completion: nil)
+        
+        return true
+    }
+}

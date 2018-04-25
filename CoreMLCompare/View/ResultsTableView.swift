@@ -70,8 +70,7 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
         if !firstModel, let currModel = models.modelAtIndex(indexPath.row), currModel.state != .processing {
             let add = UITableViewRowAction(style: .normal, title: "Add") { action, index in
                 if let pasteboardText = UIPasteboard.general.string, let url = Model.getURLFromText(pasteboardText) {
-                    // Oh boy, here we go
-                    // (1) Remove old model
+                    // Remove old model
                     do {
                         try self.models.deleteModelAtIndex(index.row)
                         self.resultsTableView.reloadRows(at: [index], with: .none)
@@ -83,7 +82,7 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
                         Log.e("Failed to remove model at index \(index.row): \(error.localizedDescription)")
                     }
                     
-                    // (2) Update UI and start downloading
+                    // Update UI and start downloading
                     self.models.setStateProcessingAtIndex(index.row)
                     self.resultsTableView.updateCellAtIndex(index, withTitle: nil, andDetail: "Downloading...")
                     
@@ -97,49 +96,12 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
                             let alert = error.createAlert()
                             self.present(alert, animated: true, completion: nil)
                         } else if let downloadURL = downloadURL {
-                            let modelName = downloadURL.fileNameWithoutExtension()
-                            self.resultsTableView.updateCellAtIndex(index, withTitle: nil, andDetail: "Compiling model \(modelName)...")
-                            
-                            // (3) Compile new model
-                            DispatchQueue.global().async {
-                                let model = Model.compileModelURL(downloadURL, name: modelName)
-                                DispatchQueue.main.async {
-                                    if var model = model {
-                                        self.resultsTableView.updateCellAtIndex(index, withTitle: "\(model.name):", andDetail: "Saving and cleaning up...")
-                                        
-                                        // (4) Store model and clean up
-                                        DispatchQueue.global().async {
-                                            var success = false
-                                            do {
-                                                try model.saveCompiledModelURL()
-                                                self.models.setModelAtIndex(index.row, withModel: model)
-                                                try Helper.deleteURL(downloadURL)
-                                                success = true
-                                            } catch let error as CMLCError {
-                                                Log.e("Error while trying to store compiled model \(model.name): \(error.rawValue)")
-                                            } catch {
-                                                Log.e("Error: \(error.localizedDescription)")
-                                            }
-                                            
-                                            // (5) Update UI with new model
-                                            DispatchQueue.main.async {
-                                                if success {
-                                                    self.resultsTableView.updateCellAtIndex(index, withModel: model)
-                                                } else {
-                                                    self.resultsTableView.updateCellAtIndex(index, withModel: nil)
-                                                    
-                                                    let alert = CMLCError.addModelFail.createAlert()
-                                                    self.present(alert, animated: true, completion: nil)
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            // We have the model URL, time to process it
+                            self.prepareModelURL(downloadURL, atIndex: index)
                         }
                     }
                 } else {
-                    let infoPopup = CMLCError.createAlert(withText: "No appropriate CoreML model was found in the clipboard.\nCopy model URL to clipboard first or click the model link to import it inside the app.", andTitle: "Adding a model")
+                    let infoPopup = CMLCError.createAlert(withText: "No appropriate CoreML model was found in the clipboard.\nCopy model URL to clipboard first or click the model file after download to import it inside the app.", andTitle: "Adding a model")
                     self.present(infoPopup, animated: true, completion: nil)
                 }
             }
@@ -171,5 +133,71 @@ extension CMLCViewController: URLDownloadDelegate {
     
     func reportProgress(_ percentage: Int, atIndex index: IndexPath) {
         resultsTableView.updateCellAtIndex(index, withTitle: nil, andDetail: "Downloading... \(percentage)%")
+    }
+}
+
+// MARK: - Model processing
+extension CMLCViewController {
+    
+    func prepareModelURL(_ modelURL: URL, atIndex index: IndexPath) {
+        let modelName = modelURL.fileNameWithoutExtension()
+        resultsTableView.updateCellAtIndex(index, withTitle: nil, andDetail: "Compiling model \(modelName)...")
+        
+        // Compile new model
+        DispatchQueue.global().async {
+            let model = Model.compileModelURL(modelURL, name: modelName)
+            DispatchQueue.main.async {
+                if var model = model {
+                    self.resultsTableView.updateCellAtIndex(index, withTitle: "\(model.name):", andDetail: "Saving and cleaning up...")
+                    
+                    // Store model and clean up
+                    DispatchQueue.global().async {
+                        var success = false
+                        do {
+                            try model.saveCompiledModelURL()
+                            self.models.setModelAtIndex(index.row, withModel: model)
+                            try Helper.deleteURL(modelURL)
+                            success = true
+                        } catch let error as CMLCError {
+                            Log.e("Error while trying to store compiled model \(model.name): \(error.rawValue)")
+                        } catch {
+                            Log.e("Error: \(error.localizedDescription)")
+                        }
+                        
+                        // Update UI with new model
+                        DispatchQueue.main.async {
+                            if success {
+                                self.resultsTableView.updateCellAtIndex(index, withModel: model)
+                            } else {
+                                self.resultsTableView.updateCellAtIndex(index, withModel: nil)
+                                
+                                let alert = CMLCError.addModelFail.createAlert()
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - NewModelDelegate
+extension CMLCViewController: NewModelDelegate {
+    
+    func onImport(newModelURL url: URL, atIndex index: Int) {
+        Log.i("Will import model \(url.fileNameWithoutExtension()) at index \(index)")
+        prepareModelURL(url, atIndex: IndexPath(row: index, section: 0))
+    }
+    
+    func onCancel(newModelURL url: URL) {
+        Log.i("User canceled importing of new model \(url.fileNameWithoutExtension())")
+        do {
+            try Helper.deleteURL(url)
+        } catch let error as CMLCError {
+            Log.e("Error while trying to delete downlaoded model URL \(url.absoluteString): \(error.rawValue)")
+        } catch {
+            Log.e("Error while trying to delete downloaded model URL \(url.absoluteString): \(error.localizedDescription)")
+        }
     }
 }
