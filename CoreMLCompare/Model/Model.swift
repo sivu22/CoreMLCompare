@@ -8,12 +8,14 @@
 
 import Foundation
 import Vision
+import UIKit
 
 struct Model {
     
     static let fileExtension = "mlmodel"
     static let compiledExtension = "mlmodelc"
     static let resourceExtenstion = "cmlc"
+    static let confidenceMinLevel = Float(0.5)
     
     enum State: Int {
         case none
@@ -22,12 +24,17 @@ struct Model {
         case enabled
     }
     
+    static let colors = [UIColor.black, UIColor.darkGray, UIColor.lightGray, UIColor.gray, UIColor.red, UIColor.green, UIColor.blue, UIColor.cyan, UIColor.magenta, UIColor.orange, UIColor.purple, UIColor.brown]
+    
     private(set) var visionModel: VNCoreMLModel?
     private(set) var name: String
     private(set) var state: State
     
     private(set) var object: String
     private(set) var confidence: String
+    
+    private(set) var minConfidence: Float
+    private(set) var color: Int
     
     private(set) var compiledURL: URL?
     
@@ -36,6 +43,8 @@ struct Model {
         case name
         case state
         case compiledURL
+        case minConfidence
+        case color
     }
     
     
@@ -45,6 +54,9 @@ struct Model {
         
         object = ""
         confidence = "0%"
+        
+        minConfidence = Model.confidenceMinLevel
+        color = 0
     }
     
     init(withCoreMLModel model: MLModel, andName givenName: String = "NoName") {
@@ -83,10 +95,6 @@ struct Model {
             Log.e("Failed to read \(compiledModelURL.lastPathComponent) model")
             return nil
         }
-    }
-    
-    mutating func setStateProcessing() {
-        state = .processing
     }
     
     static func compileModelURL(_ url: URL, name: String) -> Model? {
@@ -161,7 +169,7 @@ struct Model {
     }
     
     mutating func objectClassified(_ result: VNClassificationObservation) -> Bool {
-        if result.confidence > 0.5 {
+        if result.confidence >= minConfidence {
             object = result.identifier.localizedCapitalized
             confidence = (result.confidence * 100).stringWithTwoDecimals() + "%"
             
@@ -180,6 +188,26 @@ struct Model {
     }
 }
 
+// MARK: - Setters
+extension Model {
+    
+    mutating func setStateProcessing() {
+        state = .processing
+    }
+    
+    mutating func changeNameTo(_ newName: String) {
+        name = newName
+    }
+    
+    mutating func setMinConfidence(_ newMinConfidence: Float) {
+        minConfidence = newMinConfidence
+    }
+    
+    mutating func changeColorTo(_ newColor: Int) {
+        color = newColor
+    }
+}
+
 // MARK: - Codable
 extension Model: Codable {
     
@@ -194,6 +222,9 @@ extension Model: Codable {
         let modelFileName = try container.decode(String.self, forKey: .compiledURL)
         compiledURL = Helper.supportPathURL.appendingPathComponent(modelFileName)
         
+        minConfidence = try container.decode(Float.self, forKey: .minConfidence)
+        color = try container.decode(Int.self, forKey: .color)
+        
         object = ""
         confidence = "0%"
     }
@@ -204,6 +235,8 @@ extension Model: Codable {
         try container.encode(name, forKey: .name)
         try container.encode(state.rawValue, forKey: .state)
         try container.encode(compiledURL!.lastPathComponent, forKey: .compiledURL)
+        try container.encode(minConfidence, forKey: .minConfidence)
+        try container.encode(color, forKey: .color)
     }
 }
 

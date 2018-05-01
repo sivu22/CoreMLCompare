@@ -9,6 +9,7 @@
 import UIKit
 
 protocol NewModelDelegate {
+    
     func onCancel(newModelURL: URL)
     func onImport(newModelURL: URL, atIndex: Int)
 }

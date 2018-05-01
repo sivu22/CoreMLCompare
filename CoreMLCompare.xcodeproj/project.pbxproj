@@ -25,6 +25,7 @@
 		5283FEE1204C9AC60054FEA6 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEE0204C9AC60054FEA6 /* Model.swift */; };
 		5283FEE3204DF1A90054FEA6 /* ResultsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */; };
 		52C468EE208E773900E03210 /* AddModelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C468ED208E773900E03210 /* AddModelViewController.swift */; };
+		52C468F020963E3400E03210 /* EditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C468EF20963E3400E03210 /* EditTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		5283FEE0204C9AC60054FEA6 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsTableView.swift; sourceTree = "<group>"; };
 		52C468ED208E773900E03210 /* AddModelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddModelViewController.swift; sourceTree = "<group>"; };
+		52C468EF20963E3400E03210 /* EditTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				5283FEE2204DF1A90054FEA6 /* ResultsTableView.swift */,
 				5283FEBF2048B70B0054FEA6 /* CMLCViewController.swift */,
 				52C468ED208E773900E03210 /* AddModelViewController.swift */,
+				52C468EF20963E3400E03210 /* EditTableViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 				5283FEC02048B70B0054FEA6 /* CMLCViewController.swift in Sources */,
 				5283FEDB204C5C400054FEA6 /* Log.swift in Sources */,
 				5283FED9204C51080054FEA6 /* Helper.swift in Sources */,
+				52C468F020963E3400E03210 /* EditTableViewController.swift in Sources */,
 				5283FEE3204DF1A90054FEA6 /* ResultsTableView.swift in Sources */,
 				525E2474205EF0380037A959 /* EditingRow.swift in Sources */,
 				5283FEBE2048B70B0054FEA6 /* AppDelegate.swift in Sources */,

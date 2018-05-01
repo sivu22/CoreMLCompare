@@ -15,10 +15,14 @@ class CMLCTableView: UITableView, EditingRow {
     func updateCell(_ cell: UITableViewCell, withModel model: Model?) {
         if let model = model, model.state == .loaded {
             cell.textLabel!.text = model.name + ": " + model.object
+            cell.textLabel!.textColor = Model.colors[model.color]
             cell.detailTextLabel!.text = model.confidence
+            cell.detailTextLabel!.textColor = Model.colors[model.color]
         } else {
             cell.textLabel!.text = "None"
+            cell.textLabel!.textColor = UIColor.black
             cell.detailTextLabel!.text = "Swipe right to add a new CoreML model."
+            cell.detailTextLabel!.textColor = UIColor.black
         }
     }
     

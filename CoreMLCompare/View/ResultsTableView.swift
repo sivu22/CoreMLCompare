@@ -60,6 +60,16 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
         // MARK: Edit
         if let model = models.modelAtIndex(indexPath.row), model.state == .loaded {
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
+                let vc = self.storyboard!.instantiateViewController(withIdentifier: "EditModelNav") as! UINavigationController
+                let vcEdit = vc.childViewControllers.first as! EditTableViewController
+                
+                vcEdit.model = model
+                vcEdit.index = index.row
+                vcEdit.delegate = self
+                
+                self.present(vc, animated: true, completion: nil)
+                
+                self.resultsTableView.setEditing(false, animated: true)
             }
             
             edit.backgroundColor = UIColor.lightGray
@@ -199,5 +209,16 @@ extension CMLCViewController: NewModelDelegate {
         } catch {
             Log.e("Error while trying to delete downloaded model URL \(url.absoluteString): \(error.localizedDescription)")
         }
+    }
+}
+
+// MARK: - EditModelDelegate
+extension CMLCViewController: EditModelDelegate {
+    
+    func onEdit(model: Model, atIndex index: Int) {
+        Log.i("Will save settings for model \(model.name) at index \(index)")
+        
+        models.setModelAtIndex(index, withModel: model)
+        resultsTableView.updateCellAtIndex(IndexPath(row: index, section: 0), withModel: model)
     }
 }

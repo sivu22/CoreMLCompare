@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class Helper {
     
@@ -107,5 +108,39 @@ extension URL {
     
     func fileNameWithoutExtension() -> String {
         return self.isFileURL ? self.deletingPathExtension().lastPathComponent : ""
+    }
+}
+
+extension UIColor {
+    
+    func name() -> String {
+        switch self {
+        case UIColor.black:
+            return "Black"
+        case UIColor.darkGray:
+            return "Dark Gray"
+        case UIColor.lightGray:
+            return "Light Gray"
+        case UIColor.gray:
+            return "Gray"
+        case UIColor.red:
+            return "Red"
+        case UIColor.green:
+            return "Green"
+        case UIColor.blue:
+            return "Blue"
+        case UIColor.cyan:
+            return "Cyan"
+        case UIColor.magenta:
+            return "Magenta"
+        case UIColor.orange:
+            return "Orange"
+        case UIColor.purple:
+            return "Purple"
+        case UIColor.brown:
+            return "Brown"
+        default:
+            return ""
+        }
     }
 }

@@ -19,6 +19,7 @@ class CMLCViewController: UIViewController {
     private var previewLayer: AVCaptureVideoPreviewLayer!
     
     var models: Models!
+    var initDone: Bool!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +29,17 @@ class CMLCViewController: UIViewController {
         resultsTableView.delegate = self
         resultsTableView.dataSource = self
         resultsTableView.tableFooterView = UIView(frame: CGRect.zero)
+        
+        initDone = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if initDone {
+            Log.d("Init already done, skipping...")
+            return
+        }
         
         setUpModels()
         
@@ -44,6 +52,8 @@ class CMLCViewController: UIViewController {
             let alert = CMLCError.createAlert(withText: error.localizedDescription)
             present(alert, animated: true, completion: nil)
         }
+        
+        initDone = true
     }
     
     override func didReceiveMemoryWarning() {
