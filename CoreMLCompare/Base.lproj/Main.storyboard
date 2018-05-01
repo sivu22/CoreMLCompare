@@ -220,9 +220,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="87.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="40" minValue="40" maxValue="90" translatesAutoresizingMaskIntoConstraints="NO" id="DE2-hE-dCU">
-                                                    <rect key="frame" x="14" y="48" width="347" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="40" minValue="40" maxValue="90" translatesAutoresizingMaskIntoConstraints="NO" id="DE2-hE-dCU">
+                                                    <rect key="frame" x="14" y="47" width="347" height="31"/>
                                                     <connections>
                                                         <action selector="confidenceChanged:" destination="Qwb-Pn-JuD" eventType="valueChanged" id="D1D-s2-qTG"/>
                                                     </connections>
@@ -235,6 +234,9 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="DE2-hE-dCU" secondAttribute="trailing" constant="16" id="3EZ-Li-HdI"/>
+                                                <constraint firstAttribute="bottom" secondItem="DE2-hE-dCU" secondAttribute="bottom" constant="10.5" id="70w-zL-o1M"/>
+                                                <constraint firstItem="DE2-hE-dCU" firstAttribute="leading" secondItem="zRy-p2-sj7" secondAttribute="leading" constant="16" id="N0q-5n-kmi"/>
                                                 <constraint firstItem="2m1-2N-Csi" firstAttribute="top" secondItem="zRy-p2-sj7" secondAttribute="top" constant="11" id="Shl-ee-VrC"/>
                                                 <constraint firstItem="2m1-2N-Csi" firstAttribute="centerX" secondItem="zRy-p2-sj7" secondAttribute="centerX" id="TxF-y2-8Ym"/>
                                             </constraints>
