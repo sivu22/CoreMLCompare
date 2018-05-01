@@ -141,7 +141,7 @@ extension CMLCViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
         
         var requests = [VNCoreMLRequest]()
         for (index, var cmlcModel) in models.cmlcModels.enumerated() {
-            if cmlcModel.state == .loaded {
+            if cmlcModel.state == .enabled {
                 let request = VNCoreMLRequest(model: cmlcModel.visionModel!) { request, error in
                     guard let results = request.results as? [VNClassificationObservation] else {
                         Log.e("Could not obtain results for model \(cmlcModel.name)")

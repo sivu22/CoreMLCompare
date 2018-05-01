@@ -13,11 +13,16 @@ class CMLCTableView: UITableView, EditingRow {
     var editingRow: IndexPath?
     
     func updateCell(_ cell: UITableViewCell, withModel model: Model?) {
-        if let model = model, model.state == .loaded {
-            cell.textLabel!.text = model.name + ": " + model.object
+        if let model = model, model.isEditable() {
             cell.textLabel!.textColor = Model.colors[model.color]
-            cell.detailTextLabel!.text = model.confidence
             cell.detailTextLabel!.textColor = Model.colors[model.color]
+            if model.state == .enabled {
+                cell.textLabel!.text = model.name + ": " + model.object
+                cell.detailTextLabel!.text = model.confidence
+            } else if model.state == .loaded {
+                cell.textLabel!.text = model.name + ": Disabled"
+                cell.detailTextLabel!.text = "Swipe right to enable this model."
+            }
         } else {
             cell.textLabel!.text = "None"
             cell.textLabel!.textColor = UIColor.black

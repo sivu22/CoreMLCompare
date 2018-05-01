@@ -32,7 +32,7 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
         let firstModel = indexPath.row == 0
         
         // MARK: Delete
-        if !firstModel, let model = models.modelAtIndex(indexPath.row), model.state == .loaded {
+        if !firstModel, let model = models.modelAtIndex(indexPath.row), model.isEditable() {
             let delete = UITableViewRowAction(style: .destructive, title: "Delete") { action, index in
                 let alert = UIAlertController(title: "", message: "Are you sure you want to delete the model \(model.name)?", preferredStyle: UIAlertControllerStyle.alert)
                 let yesAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.destructive, handler: { (action: UIAlertAction!) in
@@ -57,8 +57,28 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
             actions.append(delete)
         }
         
+        // MARK: Enable/Disable
+        if var model = models.modelAtIndex(indexPath.row), model.isEditable() {
+            let stateEnabled = model.state == .enabled
+            let enable = UITableViewRowAction(style: .normal, title: stateEnabled ? "Disable" : "Enable") { action, index in
+                self.resultsTableView.setEditing(false, animated: true)
+                
+                if stateEnabled {
+                    model.disable()
+                } else {
+                    model.enable()
+                }
+                
+                self.models.setModelAtIndex(indexPath.row, withModel: model, andSave: false)
+                self.resultsTableView.updateCellAtIndex(indexPath, withModel: model)
+            }
+            
+            enable.backgroundColor = UIColor.darkGray
+            actions.append(enable)
+        }
+        
         // MARK: Edit
-        if let model = models.modelAtIndex(indexPath.row), model.state == .loaded {
+        if !firstModel, let model = models.modelAtIndex(indexPath.row), model.isEditable() {
             let edit = UITableViewRowAction(style: .normal, title: "Edit") { action, index in
                 let vc = self.storyboard!.instantiateViewController(withIdentifier: "EditModelNav") as! UINavigationController
                 let vcEdit = vc.childViewControllers.first as! EditTableViewController
@@ -67,9 +87,8 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
                 vcEdit.index = index.row
                 vcEdit.delegate = self
                 
-                self.present(vc, animated: true, completion: nil)
-                
                 self.resultsTableView.setEditing(false, animated: true)
+                self.present(vc, animated: true, completion: nil)
             }
             
             edit.backgroundColor = UIColor.lightGray
@@ -100,8 +119,9 @@ extension CMLCViewController: UITableViewDelegate, UITableViewDataSource {
                     urlDownload.delegate = self
                     urlDownload.start() { (downloadURL, error) in
                         if let error = error {
-                            self.models.setModelAtIndex(index.row, withModel: Model())
-                            self.resultsTableView.reloadRows(at: [index], with: .none)
+                            self.models.setModelAtIndex(index.row, withModel: Model()) {
+                                self.resultsTableView.reloadRows(at: [index], with: .none)
+                            }
                             
                             let alert = error.createAlert()
                             self.present(alert, animated: true, completion: nil)

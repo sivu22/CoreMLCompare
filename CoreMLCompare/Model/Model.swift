@@ -48,6 +48,7 @@ struct Model {
     }
     
     
+    // MARK: - Initializers
     init() {
         state = .none
         name = ""
@@ -85,23 +86,13 @@ struct Model {
         }
     }
     
-    init?(fromCompiledModel compiledModelURL: URL) {
-        self.init()
-        
-        if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
-            self = Model(withCoreMLModel: compiledModel, andName: compiledModelURL.fileNameWithoutExtension())
-            self.compiledURL = compiledModelURL
-        } else {
-            Log.e("Failed to read \(compiledModelURL.lastPathComponent) model")
-            return nil
-        }
-    }
-    
+    // MARK: - Model operations
     static func compileModelURL(_ url: URL, name: String) -> Model? {
         if let compiledModelURL = try? MLModel.compileModel(at: url) {
             if let compiledModel = try? MLModel(contentsOf: compiledModelURL) {
                 var model = Model(withCoreMLModel: compiledModel, andName: name)
                 model.compiledURL = compiledModelURL
+                model.state = .enabled
                 return model
             } else {
                 Log.e("Failed to read \(url.lastPathComponent) model")
@@ -145,7 +136,8 @@ struct Model {
             visionModel = try? VNCoreMLModel(for: compiledModel)
             if visionModel == nil {
                 error = "Failed to init \(name) model"
-            } else {
+                state = .none
+            } else if state != .enabled {
                 state = .loaded
             }
         } else {
@@ -186,6 +178,10 @@ struct Model {
         
         return URL(string: text)
     }
+    
+    func isEditable() -> Bool {
+        return state.rawValue >= State.loaded.rawValue
+    }
 }
 
 // MARK: - Setters
@@ -193,6 +189,23 @@ extension Model {
     
     mutating func setStateProcessing() {
         state = .processing
+    }
+    
+    mutating func enable() {
+        if state == .loaded {
+            state = .enabled
+            Log.i("Enabled model \(name)")
+        }
+    }
+    
+    mutating func disable() {
+        if state == .enabled {
+            state = .loaded
+            Log.i("Disabled model \(name)")
+            
+            object = ""
+            confidence = "0%"
+        }
     }
     
     mutating func changeNameTo(_ newName: String) {

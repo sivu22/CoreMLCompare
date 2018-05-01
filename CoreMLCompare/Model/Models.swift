@@ -15,16 +15,17 @@ struct Models {
     let count = 4
     
     init() {
-        // Load the reference model by default
-        let model = Model(withCoreMLModel: MobileNet().model, andName: "MobileNet")
-        cmlcModels.append(model)
+        // Load the reference model and enable it by default
+        var model = Model(withCoreMLModel: MobileNet().model, andName: "MobileNet")
+        model.enable()
         
-        for _ in 1..<count {
-            cmlcModels.append(Model())
+        if model.state == .enabled {
+            Log.i("Successfully loaded and enabled model \(model.name)")
         }
         
-        if model.state == .loaded {
-            Log.i("Successfully loaded model \(model.name)")
+        cmlcModels.append(model)
+        for _ in 1..<count {
+            cmlcModels.append(Model())
         }
     }
     
@@ -72,8 +73,8 @@ struct Models {
             Log.i("No models were found, will prepare SqueezeNet")
             
             if var model = Model(withResourceName: "SqueezeNet", andExtension: Model.resourceExtenstion) {
-                if model.state == .loaded {
-                    Log.i("Successfully loaded model \(model.name)")
+                if model.state == .enabled {
+                    Log.i("Successfully loaded and enabled model \(model.name)")
                     
                     do {
                         try model.saveCompiledModelURL()
@@ -103,7 +104,7 @@ struct Models {
             return
         }
         
-        guard cmlcModels[index].state == .loaded else {
+        guard cmlcModels[index].isEditable() else {
             Log.i("No model found (or not ready) at index \(index)")
             return
         }
@@ -117,8 +118,8 @@ struct Models {
         try cmlcModels[index].destroy()
     }
     
-    mutating func setModelAtIndex(_ index: Int, withModel model: Model, andSave save: Bool = true) {
-        guard index > 0 && index < cmlcModels.count else {
+    mutating func setModelAtIndex(_ index: Int, withModel model: Model, andSave save: Bool = true, completionHandler: (() -> ())? = nil) {
+        guard index >= 0 && index < cmlcModels.count else {
             Log.e("Bad index: \(index)")
             return
         }
@@ -138,6 +139,8 @@ struct Models {
                 Log.e("Model at index \(index) will not be available after app restart!")
             }
         }
+        
+        completionHandler?()
     }
     
     mutating func setStateProcessingAtIndex(_ index: Int) {
