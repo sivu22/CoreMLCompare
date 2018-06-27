@@ -77,7 +77,7 @@ class CMLCViewController: UIViewController {
             }
             
             self.previewLayer?.connection?.videoOrientation = orientation
-            self.previewLayer?.frame = self.videoImageView.frame
+            self.previewLayer?.frame = self.view.frame
         }, completion: { (context) -> Void in
         })
     }
@@ -117,11 +117,13 @@ extension CMLCViewController {
         output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
         
         let session = AVCaptureSession()
+        //session.sessionPreset = AVCaptureSession.Preset.photo
         session.addInput(input)
         session.addOutput(output)
         
         previewLayer = AVCaptureVideoPreviewLayer(session: session)
         previewLayer.frame = view.frame
+        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         videoImageView.layer.addSublayer(previewLayer)
         
         session.startRunning()
